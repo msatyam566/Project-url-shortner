@@ -1,7 +1,5 @@
 const urlModel = require("../models/urlModel")
-var validUrl = require('valid-url');
 const shortid = require('shortid')
-const mongoose = require('mongoose')
 
 
 const baseUrl = ' http://localhost:3000'
@@ -30,13 +28,11 @@ const urlCreate = async function(req,res){
             return res.status(400).send({ status: false, error: " Please provide valid URL" });
 
         }
-
         let lUrl = await urlModel.findOne({ longUrl })
         if (lUrl) {
             return res.status(200).send({ status: true, data: { longUrl: lUrl.longUrl, shortUrl: lUrl.shortUrl, urlCode: lUrl.urlCode } })
         }
-       
-
+        
         let urlData = {longUrl,shortUrl,urlCode}
 
         let data = await urlModel.create(urlData)
@@ -57,16 +53,20 @@ let getOriginalUrl=async function(req,res){
 
         if(!urlCode){return res.status(400).send({status:false,message:"urlCode Required"})}
 
-         let findUrlCode=await urlModel.findOne({urlCode})
+         let findUrlCode=await urlModel.findOne({urlCode:urlCode})
+         console.log(findUrlCode)
+         
          if(!findUrlCode){return res.status(400).send({status:false,message:"urlCode not found"})}
 
-         let longUrl=findUrlCode.longUrl
-         return res.status(200).send({status:true,data:longUrl})
+         return res.status(302).redirect(findUrlCode.longUrl)
     }
     catch (error) {
         res.status(500).send({ status: false, message: error.message })
     }
 }
+  
+
+
     
 
 module.exports.urlCreate = urlCreate
