@@ -5,8 +5,8 @@ const urlController = require("../controller/urlController")
 
 
 
-router.post("/url/shorten",urlController.urlCreate)
-router.get("/:urlCode",urlController.getOriginalUrl)
+router.post("/url/shorten",urlController.createUrl)
+router.get("/:urlCode",urlController.getUrlcode)
 
 
 
